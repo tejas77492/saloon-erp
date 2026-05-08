@@ -4,6 +4,8 @@
  */
 
 require('dotenv').config();
+const dns = require('dns');
+dns.setServers(['8.8.8.8', '8.8.4.4']); // Use Google DNS for SRV lookups
 const mongoose = require('mongoose');
 const User     = require('../models/User');
 const Service  = require('../models/Service');
@@ -35,13 +37,22 @@ async function seed() {
     await mongoose.connect(process.env.MONGODB_URI);
     console.log('✅ Connected to MongoDB');
 
-    // Admin user
+    // Admin user 1
     const existing = await User.findOne({ email: 'admin@salon.com' });
     if (!existing) {
       await User.create({ name: 'Salon Admin', email: 'admin@salon.com', password: 'admin123', role: 'admin' });
       console.log('✅ Admin created  →  admin@salon.com / admin123');
     } else {
-      console.log('ℹ️  Admin already exists');
+      console.log('ℹ️  Admin (admin@salon.com) already exists');
+    }
+
+    // Admin user 2 - Avinash
+    const existing2 = await User.findOne({ email: 'avinash@salon.com' });
+    if (!existing2) {
+      await User.create({ name: 'Avinash', email: 'avinash@salon.com', password: 'avinash111', role: 'admin' });
+      console.log('✅ Admin created  →  avinash@salon.com / avinash111');
+    } else {
+      console.log('ℹ️  Admin (avinash@salon.com) already exists');
     }
 
     // Services
